@@ -342,6 +342,5 @@ Key papers informing this analysis:
 
 ---
 
-**Maintainer**: [Your Name]
-**Contact**: [Your Email]
+**Maintainer**: Maximilian Bonk
 **Last Updated**: February 2026
