@@ -1,0 +1,162 @@
+# Asset Pricing and Investor Sentiment Analysis
+# Configuration File
+
+# Paths
+paths:
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  results: "results"
+  figures: "results/figures"
+  tables: "results/tables"
+  checkpoints: "results/checkpoints"
+
+  # External data sources (update these paths if data is stored elsewhere)
+  sentiment_indicators: "data/raw/sentiment"
+  factor_portfolios: "data/raw/factors"
+  macro_data: "data/raw/macro"
+
+# Sentiment indicators
+sentiment:
+  indicators:
+    - BW                 # Baker-Wurgler Sentiment Index
+    - Zhou_Investor      # Zhou Investor Sentiment
+    - ICS                # University of Michigan Consumer Sentiment
+    - AAII               # AAII Bull-Bear Spread
+    - VIX                # CBOE Volatility Index
+    - Manager            # Zhou Manager Sentiment
+    - Employee           # Zhou Employee Sentiment
+
+  # Components for University of Michigan
+  umich_components:
+    - ICS                # Index of Consumer Sentiment
+    - ICC                # Index of Consumer Conditions
+    - ICE                # Index of Consumer Expectations
+
+# Macroeconomic variables (for orthogonalization)
+macro_variables:
+  real_variables:        # Use log-differences for growth rates
+    - INDPRO             # Industrial Production
+    - DURABLE            # Durable Consumption
+    - NONDUR             # Nondurable Consumption
+    - SERVICES           # Services
+    - EMPLOY             # Employment
+
+  nominal_variables:     # Use percentage changes
+    - CPI                # Consumer Price Index
+
+  growth_window: 12      # 12-month growth rates
+
+# Regression parameters
+regression:
+  newey_west_lags:
+    orthogonalization: 4  # Lags for sentiment orthogonalization
+    residuals: 8          # Lags for calculating residuals
+    hml_test: 3           # Lags for High-Minus-Low t-tests
+
+  significance_levels: [0.01, 0.05, 0.10]
+
+  # VIF threshold for multicollinearity
+  vif_threshold: 10
+  vif_warning: 5
+
+# Sentiment conditional analysis
+sentiment_conditional:
+  tercile_low: 0.33      # Bottom tercile threshold
+  tercile_high: 0.67     # Top tercile threshold
+
+  # Portfolio legs to analyze
+  portfolio_legs:
+    - Long               # Decile 10
+    - Short              # Decile 01
+    - Long-Short         # 10 - 01
+
+# Factor models
+factor_models:
+  - CAPM                 # Market model
+  - FF3                  # Fama-French 3-factor
+  - FF5                  # Fama-French 5-factor
+
+  # Require significance across all models for robustness
+  require_all_significant: true
+
+# Factor data sources
+factor_data:
+  sources:
+    - OAP                # Open Asset Pricing
+    - JKP                # JKP Factor Library
+
+  weighting: "vw"        # Value-weighted portfolios
+  frequency: "monthly"   # Monthly data
+
+  # Decile portfolios
+  deciles:
+    long: 10             # Long portfolio (high decile)
+    short: 1             # Short portfolio (low decile)
+
+  # Ensure Long-Short has positive mean
+  flip_negative_ls: true
+
+# PCA analysis
+pca:
+  n_components: null     # null = keep all components
+  standardize: true      # Standardize before PCA
+
+  # Sample periods for PCA analysis
+  sample_periods:
+    - Full Sample
+    - Long Sample
+    - Modern Sample
+    - Manager Window
+    - Full Overlap
+
+# Multiple testing correction
+multiple_testing:
+  method: "fdr_bh"       # False Discovery Rate (Benjamini-Hochberg)
+  fdr_alpha: 0.05
+
+# Statistical diagnostics
+diagnostics:
+  run_vif: true          # Variance Inflation Factor
+  run_bp_test: true      # Breusch-Pagan heteroskedasticity test
+  run_normality: true    # Shapiro-Wilk, Jarque-Bera tests
+
+# Visualization settings
+visualization:
+  figure_format: "png"   # png, pdf, svg
+  figure_dpi: 300
+  style: "seaborn-v0_8-darkgrid"
+  color_palette: "Set2"
+
+  # Figure sizes (width, height) in inches
+  figure_sizes:
+    default: [10, 6]
+    wide: [14, 6]
+    square: [8, 8]
+    tall: [8, 10]
+
+# Data processing
+data_processing:
+  # Resampling
+  resample_to_month_end: true
+
+  # Missing data
+  handle_missing: "drop"  # drop, forward_fill, backward_fill
+
+  # Outliers
+  winsorize: false        # Set to true to winsorize outliers
+  winsorize_limits: [0.01, 0.99]  # 1st and 99th percentiles
+
+# Checkpoint settings
+checkpoints:
+  save_checkpoints: true
+  checkpoint_prefix: "checkpoint_"
+  encoding: "utf-8-sig"
+
+# Logging
+logging:
+  level: "INFO"          # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "results/analysis.log"
+
+# Random seed for reproducibility
+random_seed: 42

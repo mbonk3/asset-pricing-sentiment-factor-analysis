@@ -1,0 +1,21 @@
+# Handle line endings automatically for files detected as text
+# and leave all files detected as binary untouched
+* text=auto
+
+# Explicitly force LF for code files
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.ipynb text eol=lf
+*.csv text eol=lf
+
+# Binary files - do not process
+*.xlsx binary
+*.xls binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
