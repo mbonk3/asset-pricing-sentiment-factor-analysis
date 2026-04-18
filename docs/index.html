@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asset Pricing &amp; Investor Sentiment | Maximilian Bonk</title>
+  <meta name="description" content="Master's thesis: Does investor sentiment—once purified of macroeconomic confounds—help explain or predict the returns of well-documented anomaly portfolios?" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="brand" href="#">Asset Pricing &amp; Sentiment</a>
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#code">Code</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">Master&rsquo;s Thesis &mdash; Empirical Finance</div>
+  <h1>Asset Pricing and <em>Investor Sentiment</em> Factor Analysis</h1>
+  <p class="subtitle">
+    A comprehensive empirical investigation into the behavioral drivers of factor portfolio returns,
+    combining econometric sentiment purification with multi-model asset pricing tests.
+  </p>
+  <div class="hero-meta">
+    <span><strong>Author:</strong> Maximilian Bonk</span>
+    <span><strong>Updated:</strong> February 2026</span>
+    <span><strong>License:</strong> MIT</span>
+  </div>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">View on GitHub</a>
+    <a class="btn btn-outline" href="#methodology">Read Methodology</a>
+  </div>
+</header>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="container">
+    <div class="section-label">Research Question</div>
+    <h2>What drives the premium in anomaly portfolios?</h2>
+    <p class="lead">
+      This thesis sits at the intersection of behavioral finance and quantitative asset pricing.
+      The central question is whether investor sentiment — isolated from macroeconomic noise —
+      carries additional explanatory power for anomaly returns beyond established risk factors.
+    </p>
+
+    <div class="rq-box">
+      <blockquote>
+        Does investor sentiment — <em>once purified of macroeconomic confounds</em> — help explain
+        or predict the returns of well-documented anomaly (factor-based) portfolios?
+      </blockquote>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box"><div class="num">7</div><div class="label">Sentiment Indicators</div></div>
+      <div class="stat-box"><div class="num">3</div><div class="label">Asset Pricing Models</div></div>
+      <div class="stat-box"><div class="num">6</div><div class="label">Macro Controls</div></div>
+      <div class="stat-box"><div class="num">3</div><div class="label">Portfolio Legs</div></div>
+      <div class="stat-box"><div class="num">4</div><div class="label">Sample Periods</div></div>
+    </div>
+
+    <div class="section-label" style="margin-top:2.5rem">Analysis Pipeline</div>
+    <h2>Three-stage analytical framework</h2>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">1</div>
+        <h3>Sentiment Orthogonalization</h3>
+        <p>Purify 7 sentiment indicators of macroeconomic influences using OLS regression with Newey-West HAC standard errors. Residuals capture the pure behavioral component.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="step-num">2</div>
+        <h3>Factor Model Testing</h3>
+        <p>Test anomaly portfolios against CAPM, FF3, and FF5 models to identify robust anomalies. Compute benchmark-adjusted returns (FF5 residuals) for sentiment analysis.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="step-num">3</div>
+        <h3>Sentiment-Conditional Analysis</h3>
+        <p>Classify months into High and Low sentiment regimes via tercile splits. Compare factor returns across regimes and test the High-Minus-Low differential.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section id="methodology">
+  <div class="container">
+    <div class="section-label">Econometrics</div>
+    <h2>Methodology</h2>
+    <p class="lead">
+      The analysis employs robust econometric techniques throughout, including Newey-West HAC
+      standard errors, PCA for dimensionality reduction, and Benjamini-Hochberg FDR correction
+      for multiple testing.
+    </p>
+
+    <!-- Stage 1 -->
+    <div class="method-block">
+      <div class="method-header">
+        <span class="num">1</span>
+        <h3>Sentiment Orthogonalization</h3>
+      </div>
+      <div class="method-body">
+        <p>
+          Raw sentiment indicators conflate macroeconomic conditions with behavioral psychology.
+          To isolate the pure behavioral channel, each sentiment indicator $S_t$ is regressed
+          on six macroeconomic growth rates:
+        </p>
+        <div class="eq-box">
+          <div class="eq-label">Orthogonalization Regression</div>
+          $$S_t = \alpha + \sum_{k=1}^{6} \beta_k \,\Delta^{12} X_{k,t} + \varepsilon_t$$
+        </div>
+        <p>
+          The residuals $\varepsilon_t$ are the <strong>orthogonalized (behavioral) sentiment</strong>,
+          stripped of macroeconomic confounds. All macro variables are transformed to
+          12-month growth rates for stationarity:
+        </p>
+        <ul>
+          <li><strong>Real variables</strong> (IP, Consumption, Employment): $\Delta^{12} X_t = \ln(X_t) - \ln(X_{t-12})$</li>
+          <li><strong>Nominal variables</strong> (CPI): $\Delta^{12} X_t = (X_t - X_{t-12}) / X_{t-12}$</li>
+        </ul>
+        <p><strong>Estimation:</strong> OLS with Newey-West HAC standard errors (4 lags).</p>
+        <p><strong>Diagnostics:</strong> R&sup2;, Variance Inflation Factor (VIF &lt; 10), Breusch-Pagan heteroskedasticity test, Durbin-Watson autocorrelation test, Jarque-Bera normality test.</p>
+      </div>
+    </div>
+
+    <!-- Stage 2 -->
+    <div class="method-block">
+      <div class="method-header">
+        <span class="num">2</span>
+        <h3>Factor Model Testing</h3>
+      </div>
+      <div class="method-body">
+        <p>
+          Each anomaly portfolio is tested against three progressively comprehensive asset pricing
+          models. A factor is considered a <em>robust anomaly</em> only if its alpha is statistically
+          significant at the 5% level across all three models simultaneously.
+        </p>
+        <div class="eq-box">
+          <div class="eq-label">CAPM</div>
+          $$R_{it} - R_{ft} = \alpha_i + \beta_{i,MKT}(R_{mt} - R_{ft}) + \varepsilon_{it}$$
+        </div>
+        <div class="eq-box">
+          <div class="eq-label">Fama-French 3-Factor</div>
+          $$R_{it} - R_{ft} = \alpha_i + \beta_{MKT}(R_{mt} - R_{ft}) + \beta_{SMB}\,SMB_t + \beta_{HML}\,HML_t + \varepsilon_{it}$$
+        </div>
+        <div class="eq-box">
+          <div class="eq-label">Fama-French 5-Factor</div>
+          $$R_{it} - R_{ft} = \alpha_i + \beta_{MKT}(R_{mt} - R_{ft}) + \beta_{SMB}\,SMB_t + \beta_{HML}\,HML_t + \beta_{RMW}\,RMW_t + \beta_{CMA}\,CMA_t + \varepsilon_{it}$$
+        </div>
+        <p>
+          Benchmark-adjusted returns $\tilde{R}_{it}$ — the pure anomaly component after removing
+          systematic risk exposures — are computed as FF5 residuals and used in the subsequent
+          sentiment analysis.
+        </p>
+      </div>
+    </div>
+
+    <!-- Stage 3 -->
+    <div class="method-block">
+      <div class="method-header">
+        <span class="num">3</span>
+        <h3>Sentiment-Conditional Analysis</h3>
+      </div>
+      <div class="method-body">
+        <p>
+          Each month is classified into a sentiment regime via tercile splits on the
+          orthogonalized sentiment index. The middle tercile is excluded to sharpen
+          the contrast between extreme regimes.
+        </p>
+        <ul>
+          <li><strong>Low Sentiment:</strong> Bottom 33% of orthogonalized sentiment</li>
+          <li><strong>High Sentiment:</strong> Top 33% of orthogonalized sentiment</li>
+        </ul>
+        <p>The central test is the High-Minus-Low return differential:</p>
+        <div class="eq-box">
+          <div class="eq-label">High-Minus-Low Test</div>
+          $$HML_{i,s} = \bar{R}_i^{High} - \bar{R}_i^{Low}, \qquad t_{NW} = \frac{HML_{i,s}}{\hat{SE}_{NW}(HML_{i,s})}$$
+        </div>
+        <p>Tested separately for <strong>Long</strong> (D10), <strong>Short</strong> (D01), and <strong>Long-Short</strong> (D10&minus;D01) portfolio legs, with Newey-West t-statistics (3 lags).</p>
+        <p>Significance thresholds: * 10% (&vert;t&vert; &gt; 1.645) &nbsp;&nbsp; ** 5% (&vert;t&vert; &gt; 1.96) &nbsp;&nbsp; *** 1% (&vert;t&vert; &gt; 2.576)</p>
+      </div>
+    </div>
+
+    <!-- Supplementary -->
+    <div class="method-block">
+      <div class="method-header">
+        <span class="num">+</span>
+        <h3>Supplementary Analyses</h3>
+      </div>
+      <div class="method-body">
+        <ul>
+          <li><strong>Principal Component Analysis:</strong> Applied to standardized sentiment indicators to identify a common behavioral factor and assess collinearity. Run separately for four sample periods (Full, Long, Modern, Post-2000).</li>
+          <li><strong>Correlation Analysis:</strong> Pairwise Pearson correlations between sentiment indicators with Benjamini-Hochberg FDR correction at the 5% level across multiple sample windows.</li>
+          <li><strong>VIF Diagnostics:</strong> Variance Inflation Factor computed for each macro predictor in every orthogonalization regression (concern threshold: VIF &gt; 10).</li>
+          <li><strong>Alpha Survival:</strong> Proportion of anomaly factors retaining significant alphas as the model expands from CAPM to FF3 to FF5.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="data">
+  <div class="container">
+    <div class="section-label">Data Sources</div>
+    <h2>Sentiment indicators, factors &amp; macro variables</h2>
+    <p class="lead">
+      The analysis draws on seven distinct sentiment measures spanning market-based, survey-based,
+      and text-based approaches, combined with standard risk factors and macroeconomic controls.
+    </p>
+
+    <div class="section-label" style="margin-top:0">Sentiment Indicators</div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Indicator</th>
+          <th>Type</th>
+          <th>Source</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Baker-Wurgler Index</td>
+          <td><span class="badge badge-blue">Market-based</span></td>
+          <td>Jeffrey Wurgler&rsquo;s website</td>
+          <td>Composite of 6 market proxies; primary reference measure</td>
+        </tr>
+        <tr>
+          <td>Zhou Investor Sentiment</td>
+          <td><span class="badge badge-green">Survey-based</span></td>
+          <td>Author replication files</td>
+          <td>Individual investor surveys; broad retail measure</td>
+        </tr>
+        <tr>
+          <td>Michigan Consumer Sentiment (ICS)</td>
+          <td><span class="badge badge-green">Survey-based</span></td>
+          <td>FRED</td>
+          <td>University of Michigan consumer confidence index</td>
+        </tr>
+        <tr>
+          <td>AAII Bull-Bear Spread</td>
+          <td><span class="badge badge-green">Survey-based</span></td>
+          <td>AAII.com</td>
+          <td>Individual investor directional sentiment</td>
+        </tr>
+        <tr>
+          <td>CBOE VIX</td>
+          <td><span class="badge badge-blue">Market-based</span></td>
+          <td>FRED</td>
+          <td>Market-implied volatility; used as inverse sentiment proxy</td>
+        </tr>
+        <tr>
+          <td>Zhou Manager Sentiment</td>
+          <td><span class="badge badge-purple">Text-based</span></td>
+          <td>Author replication files</td>
+          <td>Corporate manager tone from earnings calls/filings</td>
+        </tr>
+        <tr>
+          <td>Zhou Employee Sentiment</td>
+          <td><span class="badge badge-purple">Text-based</span></td>
+          <td>Author replication files</td>
+          <td>Employee-based sentiment from workforce data</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cards" style="margin-top:2.5rem">
+      <div class="card">
+        <span class="card-icon">&#128202;</span>
+        <h3>Factor Portfolios</h3>
+        <p>Decile portfolios (value-weighted) covering a broad set of anomalies from the
+        Open Asset Pricing library and JKP Factor Library.</p>
+        <span class="tag">Open Asset Pricing</span>
+        <span class="tag">JKP Library</span>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#127968;</span>
+        <h3>Fama-French Factors</h3>
+        <p>MKT-RF, SMB, HML, RMW, and CMA risk factors plus the monthly risk-free rate
+        from Kenneth French&rsquo;s Data Library.</p>
+        <span class="tag">French Data Library</span>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#128200;</span>
+        <h3>Macroeconomic Variables</h3>
+        <p>Six macro series at monthly frequency: Industrial Production, Durable &amp;
+        Nondurable Consumption, Services, Employment, CPI. Sourced from the Baker-Wurgler
+        dataset.</p>
+        <span class="tag">Baker-Wurgler Dataset</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="container">
+    <div class="section-label">Empirical Findings</div>
+    <h2>Results</h2>
+
+    <div class="results-note">
+      <strong>Note:</strong> The figures below are placeholders. If you have generated output images
+      from the analysis pipeline, please upload them to <code>docs/assets/figures/</code> and the
+      website will display them automatically once the placeholders are replaced.
+      Run <code>python scripts/run_full_analysis.py</code> to generate all result figures.
+    </div>
+
+    <div class="figure-grid">
+      <div class="figure-card">
+        <div class="figure-placeholder">
+          <div class="icon">&#128202;</div>
+          <span>Awaiting figure</span>
+        </div>
+        <div class="figure-caption">
+          <h4>Sentiment Indicators Over Time</h4>
+          <p>Time series of all 7 sentiment indicators, illustrating co-movement during
+          market stress periods.</p>
+        </div>
+      </div>
+      <div class="figure-card">
+        <div class="figure-placeholder">
+          <div class="icon">&#128260;</div>
+          <span>Awaiting figure</span>
+        </div>
+        <div class="figure-caption">
+          <h4>Original vs. Orthogonalized Sentiment</h4>
+          <p>Side-by-side comparison showing how orthogonalization removes the
+          macroeconomic component from raw sentiment series.</p>
+        </div>
+      </div>
+      <div class="figure-card">
+        <div class="figure-placeholder">
+          <div class="icon">&#127919;</div>
+          <span>Awaiting figure</span>
+        </div>
+        <div class="figure-caption">
+          <h4>Factor Returns by Sentiment Regime</h4>
+          <p>Bar chart comparing mean anomaly returns in High vs. Low sentiment months
+          across portfolio legs.</p>
+        </div>
+      </div>
+      <div class="figure-card">
+        <div class="figure-placeholder">
+          <div class="icon">&#128307;</div>
+          <span>Awaiting figure</span>
+        </div>
+        <div class="figure-caption">
+          <h4>High-Minus-Low t-Statistics</h4>
+          <p>Significance of sentiment-conditional return differentials by factor and
+          sentiment indicator, with 5% and 1% thresholds marked.</p>
+        </div>
+      </div>
+      <div class="figure-card">
+        <div class="figure-placeholder">
+          <div class="icon">&#129300;</div>
+          <span>Awaiting figure</span>
+        </div>
+        <div class="figure-caption">
+          <h4>Sentiment Correlation Heatmap</h4>
+          <p>Pairwise correlations between the 7 sentiment indicators across multiple
+          sample periods with FDR-corrected significance markers.</p>
+        </div>
+      </div>
+      <div class="figure-card">
+        <div class="figure-placeholder">
+          <div class="icon">&#128736;</div>
+          <span>Awaiting figure</span>
+        </div>
+        <div class="figure-caption">
+          <h4>PCA Loadings &amp; Variance Explained</h4>
+          <p>Principal component loadings showing the common behavioral factor structure
+          across sentiment indicators and sample periods.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CODE -->
+<section id="code">
+  <div class="container">
+    <div class="section-label">Reproducibility</div>
+    <h2>Code &amp; Repository Structure</h2>
+    <p class="lead">
+      The analysis is fully reproducible from a single pipeline script. The codebase is modular,
+      configuration-driven, and includes checkpointing so long runs can be resumed.
+    </p>
+
+    <div class="code-tree">
+<span class="dir">asset-pricing-sentiment-factor-analysis/</span>
+├── <span class="file">requirements.txt</span>          <span class="comment"># Python dependencies</span>
+├── <span class="dir">config/</span>
+│   └── <span class="file">config.yaml</span>           <span class="comment"># All parameters (lags, thresholds, paths)</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">data/</span>
+│   │   ├── <span class="file">sentiment_loader.py</span>   <span class="comment"># Load all 7 sentiment indicators</span>
+│   │   └── <span class="file">data_utils.py</span>        <span class="comment"># Config loading, checkpointing</span>
+│   ├── <span class="dir">preprocessing/</span>
+│   │   └── <span class="file">orthogonalization.py</span> <span class="comment"># OLS + Newey-West residuals</span>
+│   ├── <span class="dir">analysis/</span>
+│   │   ├── <span class="file">factor_models.py</span>      <span class="comment"># CAPM / FF3 / FF5 regressions</span>
+│   │   ├── <span class="file">sentiment_conditional.py</span> <span class="comment"># Tercile regimes, HML tests</span>
+│   │   ├── <span class="file">pca_analysis.py</span>       <span class="comment"># PCA across sample periods</span>
+│   │   └── <span class="file">statistical_tests.py</span>  <span class="comment"># Correlation, FDR, alpha survival</span>
+│   ├── <span class="dir">utils/</span>
+│   │   ├── <span class="file">regression_utils.py</span>   <span class="comment"># OLS with HAC standard errors</span>
+│   │   └── <span class="file">statistical_utils.py</span>  <span class="comment"># VIF, Breusch-Pagan, terciles</span>
+│   └── <span class="dir">visualization/</span>
+│       └── <span class="file">time_series_plots.py</span> <span class="comment"># Publication-quality figures</span>
+├── <span class="dir">notebooks/</span>
+│   └── <span class="file">05_main_analysis.ipynb</span>   <span class="comment"># End-to-end interactive workflow</span>
+├── <span class="dir">scripts/</span>
+│   └── <span class="file">run_full_analysis.py</span>     <span class="comment"># Full pipeline (with --skip-* flags)</span>
+├── <span class="dir">results/</span>
+│   ├── <span class="dir">figures/</span>                 <span class="comment"># Output plots (300 DPI PNG)</span>
+│   ├── <span class="dir">tables/</span>                  <span class="comment"># CSV result tables</span>
+│   └── <span class="dir">checkpoints/</span>             <span class="comment"># Intermediate data for resuming</span>
+└── <span class="dir">tests/</span>                       <span class="comment"># pytest unit tests</span>
+    </div>
+
+    <div class="cards" style="margin-top:2rem">
+      <div class="card">
+        <span class="card-icon">&#9881;</span>
+        <h3>Quick Start</h3>
+        <p><code>python scripts/run_full_analysis.py</code><br/>Runs the complete pipeline end-to-end, saving figures and tables to <code>results/</code>.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#128214;</span>
+        <h3>Interactive Notebook</h3>
+        <p>Open <code>notebooks/05_main_analysis.ipynb</code> for an annotated, step-by-step walkthrough of every analysis stage.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#9989;</span>
+        <h3>Tests</h3>
+        <p>Run <code>pytest tests/</code> to verify data utilities, orthogonalization, and regression utilities. Configured with <code>pytest-cov</code> for coverage.</p>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2.5rem">Technology Stack</div>
+    <div class="tech-grid">
+      <div class="tech-item"><span class="t-icon">&#128019;</span><div><div class="t-name">pandas / numpy</div><div class="t-desc">Data manipulation</div></div></div>
+      <div class="tech-item"><span class="t-icon">&#128200;</span><div><div class="t-name">statsmodels</div><div class="t-desc">OLS, Newey-West</div></div></div>
+      <div class="tech-item"><span class="t-icon">&#129302;</span><div><div class="t-name">scikit-learn</div><div class="t-desc">PCA, preprocessing</div></div></div>
+      <div class="tech-item"><span class="t-icon">&#127912;</span><div><div class="t-name">matplotlib / seaborn</div><div class="t-desc">Visualization</div></div></div>
+      <div class="tech-item"><span class="t-icon">&#128203;</span><div><div class="t-name">Jupyter</div><div class="t-desc">Interactive analysis</div></div></div>
+      <div class="tech-item"><span class="t-icon">&#128268;</span><div><div class="t-name">pandas-datareader</div><div class="t-desc">FF factor data</div></div></div>
+      <div class="tech-item"><span class="t-icon">&#127760;</span><div><div class="t-name">openassetpricing</div><div class="t-desc">Anomaly portfolios</div></div></div>
+      <div class="tech-item"><span class="t-icon">&#128295;</span><div><div class="t-name">PyYAML</div><div class="t-desc">Configuration</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REFERENCES -->
+<section id="references">
+  <div class="container">
+    <div class="section-label">Academic Literature</div>
+    <h2>References</h2>
+    <p class="lead">Key papers informing the theoretical framework and empirical methodology.</p>
+
+    <ul class="ref-list">
+      <li>
+        Baker, M., &amp; Wurgler, J. (<span class="year">2006</span>). Investor Sentiment and the Cross-Section of Stock Returns.
+        <span class="journal">Journal of Finance</span>, 61(4), 1645&ndash;1680.
+      </li>
+      <li>
+        Fama, E. F., &amp; French, K. R. (<span class="year">1993</span>). Common Risk Factors in the Returns on Stocks and Bonds.
+        <span class="journal">Journal of Financial Economics</span>, 33(1), 3&ndash;56.
+      </li>
+      <li>
+        Fama, E. F., &amp; French, K. R. (<span class="year">2015</span>). A Five-Factor Asset Pricing Model.
+        <span class="journal">Journal of Financial Economics</span>, 116(1), 1&ndash;22.
+      </li>
+      <li>
+        Newey, W. K., &amp; West, K. D. (<span class="year">1987</span>). A Simple, Positive Semi-Definite, Heteroskedasticity and Autocorrelation Consistent Covariance Matrix.
+        <span class="journal">Econometrica</span>, 55(3), 703&ndash;708.
+      </li>
+      <li>
+        Benjamini, Y., &amp; Hochberg, Y. (<span class="year">1995</span>). Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing.
+        <span class="journal">Journal of the Royal Statistical Society: Series B</span>, 57(1), 289&ndash;300.
+      </li>
+      <li>
+        Zhou, G. (<span class="year">2018</span>). Measuring Investor Sentiment.
+        <span class="journal">Annual Review of Financial Economics</span>, 10, 239&ndash;259.
+      </li>
+    </ul>
+
+    <div class="cards" style="margin-top:2rem">
+      <div class="card">
+        <h3>Data Acknowledgments</h3>
+        <p>Baker &amp; Wurgler Sentiment Index &bull; Zhou et al. Investor / Manager / Employee Sentiment
+        &bull; University of Michigan ICS (FRED) &bull; AAII Sentiment Survey
+        &bull; CBOE VIX (FRED) &bull; Open Asset Pricing &bull; Kenneth French Data Library
+        &bull; JKP Factor Library</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">Asset Pricing &amp; Investor Sentiment Factor Analysis</div>
+  <p>Master&rsquo;s Thesis &mdash; Maximilian Bonk &mdash; February 2026</p>
+  <p style="margin-top:0.5rem">
+    <a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">GitHub Repository</a>
+    &nbsp;&bull;&nbsp;
+    <a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis/blob/main/docs/methodology.md" target="_blank">Full Methodology</a>
+    &nbsp;&bull;&nbsp;
+    MIT License
+  </p>
+</footer>
+
+</body>
+</html>
