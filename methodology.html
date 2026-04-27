@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Methodology · Asset Pricing &amp; Investor Sentiment</title>
+  <meta name="description" content="Econometric methodology: sentiment orthogonalization, factor model testing, and regime-based analysis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>body { font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif; }</style>
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav>
+  <span class="nav-brand">Asset Pricing &amp; Sentiment</span>
+  <ul class="nav-links">
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="methodology.html" class="active">Methodology</a></li>
+    <li><a href="results.html">Results</a></li>
+    <li><a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- ── Page Hero ──────────────────────────────────────────────────────────── -->
+<section class="hero" style="padding: 5rem 5% 4rem;">
+  <p class="hero-eyebrow">Empirical Strategy</p>
+  <h1 style="font-size: clamp(2rem, 4vw, 3rem);">Methodology</h1>
+  <p class="hero-sub">
+    A three-stage econometric framework designed to isolate the behavioral
+    channel of investor sentiment in asset pricing.
+  </p>
+</section>
+
+<!-- ── Overview ───────────────────────────────────────────────────────────── -->
+<section class="section">
+  <p class="section-eyebrow">Framework Overview</p>
+  <h2 class="section-title">Three-stage research design</h2>
+  <p class="section-lead">
+    The central challenge is identifying the <em>behavioral</em> contribution of sentiment
+    independently of macroeconomic conditions—which also drive both sentiment readings and
+    factor returns. The analysis addresses this through sequential purification and regime testing.
+  </p>
+
+  <ul class="steps">
+    <li class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Sentiment Orthogonalization</h4>
+        <p>Each of the seven sentiment indicators is regressed on six macroeconomic growth rates
+        (industrial production, durable &amp; non-durable consumption, services, employment, CPI).
+        The regression residuals form the orthogonalized sentiment—capturing only the behavioral,
+        non-macroeconomic component. All regressions use Newey-West HAC standard errors.</p>
+      </div>
+    </li>
+    <li class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Factor Model Alpha Estimation</h4>
+        <p>1,147 long-short anomaly portfolios (decile 10 minus decile 01, value-weighted)
+        are regressed against CAPM, Fama-French 3-Factor, and Fama-French 5-Factor models.
+        Portfolios with significant alpha (p&lt;0.05) across all three models are classified as
+        "robust anomalies." Residuals from each regression serve as benchmark-adjusted returns.</p>
+      </div>
+    </li>
+    <li class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Sentiment-Conditional Regime Analysis</h4>
+        <p>Each month is classified into high (top tercile) or low (bottom tercile) sentiment
+        using the orthogonalized indicators. Mean benchmark-adjusted returns are computed within
+        each regime. Statistical significance is assessed via Newey-West t-statistics (3 lags).
+        Analysis is repeated across all 7 sentiment indicators, 4 models, and 6 geographic groups.</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- ── Sentiment Indicators ───────────────────────────────────────────────── -->
+<section class="section section-alt">
+  <p class="section-eyebrow">Data</p>
+  <h2 class="section-title">Seven sentiment indicators</h2>
+  <p class="section-lead">
+    Covering both market-based and survey-based proxies, the indicator set spans
+    retail investors, institutional managers, corporate employees, and derivatives markets,
+    providing a multi-dimensional view of sentiment.
+  </p>
+
+  <div class="indicator-grid">
+    <div class="indicator-card">
+      <div class="ind-label">Baker-Wurgler (BW)</div>
+      <p>Composite index built from IPO volume, turnover, closed-end fund discount, dividend premium, and equity issuance. The canonical market-based sentiment measure (1965–).</p>
+    </div>
+    <div class="indicator-card">
+      <div class="ind-label">Zhou Investor</div>
+      <p>Survey-based investor sentiment index from Zhou et al. capturing retail investor optimism. Highest correlation with Baker-Wurgler (r = 0.73 post-orthogonalization).</p>
+    </div>
+    <div class="indicator-card">
+      <div class="ind-label">ICS — Michigan</div>
+      <p>University of Michigan Consumer Sentiment index, a broad measure of household confidence over the business cycle (1978–).</p>
+    </div>
+    <div class="indicator-card">
+      <div class="ind-label">AAII Bull-Bear</div>
+      <p>Bull-Bear spread from the American Association of Individual Investors weekly survey—a direct measure of retail investor positioning and sentiment expectations.</p>
+    </div>
+    <div class="indicator-card">
+      <div class="ind-label">VIX (inverse)</div>
+      <p>CBOE Volatility Index used as an inverse sentiment proxy. High VIX reflects fear; low VIX reflects complacency. Negatively correlated with Investor sentiment (r = −0.29).</p>
+    </div>
+    <div class="indicator-card">
+      <div class="ind-label">Zhou Manager</div>
+      <p>Corporate manager sentiment from Zhou et al., capturing C-suite optimism about future business conditions and capital allocation intentions (2003–2017).</p>
+    </div>
+    <div class="indicator-card">
+      <div class="ind-label">Zhou Employee</div>
+      <p>Employee-level sentiment index, reflecting workforce confidence in employment stability and firm prospects—a granular micro-level sentiment proxy.</p>
+    </div>
+  </div>
+
+  <div class="finding" style="margin-top:2rem">
+    <strong>Composite: Behavioral Sentiment Index (BSI)</strong>
+    <p>A principal-component-weighted composite of the above indicators
+    (where available) forms the BSI, designed to capture the dominant shared behavioral
+    factor across all proxies. It achieves the highest High-minus-Low spread of all indicators
+    (+0.98% monthly, CAPM, OAP Robust).</p>
+  </div>
+</section>
+
+<!-- ── Factor Models ───────────────────────────────────────────────────────── -->
+<section class="section">
+  <p class="section-eyebrow">Asset Pricing Models</p>
+  <h2 class="section-title">Benchmark: three generations of factor models</h2>
+  <p class="section-lead">
+    Robustness requires anomaly alphas to persist across all three model generations.
+    Only portfolios significant in CAPM, FF3, and FF5 simultaneously are
+    classified as robust anomalies and used for the main sentiment-conditional analysis.
+  </p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>CAPM</h3>
+      <div class="eq-box">
+        R<sub>it</sub> − R<sub>ft</sub> = α + β·(R<sub>mt</sub> − R<sub>ft</sub>) + ε
+      </div>
+      <p>Single market factor. Abnormal return α = anomaly alpha. 71% of portfolios significant.</p>
+    </div>
+    <div class="card">
+      <h3>Fama-French 3-Factor</h3>
+      <div class="eq-box">
+        = α + β<sub>MKT</sub>·MKT + β<sub>SMB</sub>·SMB + β<sub>HML</sub>·HML + ε
+      </div>
+      <p>Adds size (SMB) and value (HML) factors. 75% of portfolios significant—controlling for size and value actually reveals more anomalies.</p>
+    </div>
+    <div class="card">
+      <h3>Fama-French 5-Factor</h3>
+      <div class="eq-box">
+        = α + β<sub>MKT</sub>·MKT + β<sub>SMB</sub>·SMB + β<sub>HML</sub>·HML + β<sub>RMW</sub>·RMW + β<sub>CMA</sub>·CMA + ε
+      </div>
+      <p>Adds profitability (RMW) and investment (CMA). Strictest model: 58% significant, 18% robust across all three.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Statistical Techniques ─────────────────────────────────────────────── -->
+<section class="section section-alt">
+  <p class="section-eyebrow">Statistical Rigor</p>
+  <h2 class="section-title">Addressing inference challenges in financial panels</h2>
+
+  <div class="grid-2">
+    <div>
+      <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:.6rem; color:var(--navy)">Newey-West HAC</h3>
+      <p style="font-size:.92rem; color:var(--mid); line-height:1.65; margin-bottom:1.4rem">
+        Monthly financial returns exhibit both autocorrelation and conditional heteroskedasticity.
+        Newey-West standard errors with 4–6 lags are applied to all regressions, ensuring valid
+        inference without parametric distributional assumptions.
+      </p>
+
+      <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:.6rem; color:var(--navy)">Principal Component Analysis</h3>
+      <p style="font-size:.92rem; color:var(--mid); line-height:1.65; margin-bottom:1.4rem">
+        PCA is applied to the orthogonalized sentiment indicators to assess dimensionality,
+        identify common factors, and construct the Behavioral Sentiment Index. Analysis is run
+        across four sample periods (Long, Modern, Manager, Full Overlap) to assess stability.
+      </p>
+
+      <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:.6rem; color:var(--navy)">Variance Inflation Factor (VIF)</h3>
+      <p style="font-size:.92rem; color:var(--mid); line-height:1.65">
+        VIF diagnostics are applied to the orthogonalization regressions to detect multicollinearity
+        among macroeconomic predictors. All factors pass the VIF&lt;10 threshold.
+      </p>
+    </div>
+    <div>
+      <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:.6rem; color:var(--navy)">FDR Correction (Benjamini-Hochberg)</h3>
+      <p style="font-size:.92rem; color:var(--mid); line-height:1.65; margin-bottom:1.4rem">
+        With 7 sentiment indicators, up to 21 pairwise correlations are tested per sample period.
+        Benjamini-Hochberg FDR control at 5% prevents false positives from multiple testing,
+        ensuring only genuinely significant co-movements are reported.
+      </p>
+
+      <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:.6rem; color:var(--navy)">Tercile Regime Classification</h3>
+      <p style="font-size:.92rem; color:var(--mid); line-height:1.65; margin-bottom:1.4rem">
+        Each indicator's orthogonalized time series is divided into terciles: bottom 33% = low
+        sentiment, top 33% = high sentiment. Middle tercile is excluded to sharpen the contrast.
+        All classifications use full-sample tercile breaks to avoid look-ahead bias.
+      </p>
+
+      <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:.6rem; color:var(--navy)">Breusch-Pagan Test</h3>
+      <p style="font-size:.92rem; color:var(--mid); line-height:1.65">
+        Applied as a diagnostic for heteroskedasticity in the orthogonalization regressions.
+        Results guide lag selection for Newey-West corrections and validate the HAC approach.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Data Sources ────────────────────────────────────────────────────────── -->
+<section class="section">
+  <p class="section-eyebrow">Portfolio Data</p>
+  <h2 class="section-title">1,147 anomaly portfolios from two leading libraries</h2>
+  <p class="section-lead">
+    Factor portfolios are drawn from two comprehensive, freely accessible sources covering
+    decile sorts across dozens of anomaly characteristics.
+  </p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-icon">📚</div>
+      <h3>Open Asset Pricing (OAP)</h3>
+      <p>Value-weighted decile portfolios for hundreds of cross-sectional anomalies. Coverage includes global markets across developed, emerging, and frontier economies.
+      Long-short portfolios (decile 10 − decile 01) form the primary test assets.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <h3>JKP Factor Library</h3>
+      <p>Jensen, Kelly &amp; Pedersen factor library providing alternative factor constructions
+      and theme-level aggregates across the USA, global developed, and global markets.
+      Enables cross-library robustness checks.</p>
+    </div>
+  </div>
+
+  <div class="data-table" style="margin-top:2rem; overflow-x:auto;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Portfolio Group</th>
+          <th>Source</th>
+          <th>Geography</th>
+          <th>Total Portfolios</th>
+          <th>Robust Anomalies</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>OAP All</td><td>Open Asset Pricing</td><td>Global / Multi-region</td><td>~300</td><td>35 (CAPM) / 19 (FF5)</td></tr>
+        <tr><td>JKP Factors</td><td>Jensen-Kelly-Pedersen</td><td>USA + World</td><td>~700</td><td>202 (CAPM) / 154 (FF5)</td></tr>
+        <tr><td>JKP Themes</td><td>Jensen-Kelly-Pedersen</td><td>USA + World</td><td>~150</td><td>Included in JKP total</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────────── -->
+<section class="section section-dark" style="text-align:center;">
+  <p class="section-eyebrow">Next</p>
+  <h2 class="section-title" style="color:#fff; max-width:none; margin:0 auto 1rem;">Ready to see the findings?</h2>
+  <p class="section-lead" style="margin:0 auto 2rem">
+    All figures and key statistics are presented with full context in the Results section.
+  </p>
+  <a href="results.html" class="btn btn-primary">Explore Results →</a>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+<footer>
+  <p><span class="footer-name">Maximilian Bonk</span> · Master's Thesis in Finance</p>
+  <p style="margin-top:.4rem">
+    <a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">GitHub Repository</a>
+    &nbsp;·&nbsp;
+    <a href="index.html">Overview</a>
+    &nbsp;·&nbsp;
+    <a href="results.html">Results</a>
+  </p>
+  <p style="margin-top:1rem;font-size:.78rem">
+    Data: Baker-Wurgler, Zhou et al., University of Michigan ICS, AAII, CBOE VIX,
+    Open Asset Pricing, JKP Factor Library, Kenneth French Data Library.
+  </p>
+</footer>
+
+</body>
+</html>

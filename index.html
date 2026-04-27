@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Pricing &amp; Investor Sentiment · Maximilian Bonk</title>
+  <meta name="description" content="Master's thesis research: Does orthogonalized investor sentiment predict factor portfolio returns?">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>body { font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif; }</style>
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav>
+  <span class="nav-brand">Asset Pricing &amp; Sentiment</span>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Overview</a></li>
+    <li><a href="methodology.html">Methodology</a></li>
+    <li><a href="results.html">Results</a></li>
+    <li><a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <p class="hero-eyebrow">Master's Thesis · Finance &amp; Behavioral Economics</p>
+  <h1>Asset Pricing Implications of <em>Investor Sentiment</em></h1>
+  <p class="hero-sub">
+    Does investor sentiment—once purified of macroeconomic influences—explain or predict
+    the returns of well-documented equity anomalies across global markets?
+  </p>
+  <div class="btn-group">
+    <a href="results.html" class="btn btn-primary">Explore Results →</a>
+    <a href="methodology.html" class="btn btn-outline">Methodology</a>
+    <a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" class="btn btn-outline" target="_blank">View Code</a>
+  </div>
+  <div class="hero-meta">
+    <span>Maximilian Bonk</span>
+    <span>1,147 Anomaly Portfolios</span>
+    <span>7 Sentiment Indicators</span>
+    <span>3 Asset Pricing Models</span>
+    <span>1951–2024</span>
+  </div>
+</section>
+
+<!-- ── Stat Strip ──────────────────────────────────────────────────────────── -->
+<div class="stats-strip">
+  <div class="stat-card">
+    <div class="stat-num">71%</div>
+    <div class="stat-label">of anomalies yield significant alpha under CAPM</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">+0.98%</div>
+    <div class="stat-label">monthly alpha spread in high vs. low sentiment (BSI, CAPM)</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">56%</div>
+    <div class="stat-label">of sentiment variation captured by PC1 (Long Sample)</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">0.73</div>
+    <div class="stat-label">correlation between Baker-Wurgler and Zhou Investor indices</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">7</div>
+    <div class="stat-label">orthogonalized sentiment proxies tested across 6 country groups</div>
+  </div>
+</div>
+
+<!-- ── Research Question ───────────────────────────────────────────────────── -->
+<section class="section">
+  <p class="section-eyebrow">Research Question</p>
+  <h2 class="section-title">Can behavioral sentiment explain what risk models leave behind?</h2>
+  <p class="section-lead">
+    Standard asset pricing models—CAPM, Fama-French 3- and 5-factor—leave substantial
+    unexplained returns (alphas) across hundreds of equity anomalies. This thesis investigates
+    whether the residual variation is driven by investor sentiment, purified of macroeconomic noise
+    through a Newey-West HAC orthogonalization.
+  </p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon">🧹</div>
+      <h3>Sentiment Orthogonalization</h3>
+      <p>Seven sentiment indicators are regressed on six macroeconomic growth rates to isolate the pure behavioral component, removing business-cycle confounds.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Factor Model Testing</h3>
+      <p>1,147 long-short anomaly portfolios (OAP + JKP) are tested against CAPM, FF3, and FF5. Only anomalies significant across all three models are deemed "robust."</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔀</div>
+      <h3>Regime-Based Analysis</h3>
+      <p>Periods are split into high and low sentiment terciles. Mean factor-model residuals and Newey-West t-statistics are compared across regimes, globally and by region.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Key Findings ────────────────────────────────────────────────────────── -->
+<section class="section section-alt">
+  <p class="section-eyebrow">Key Findings</p>
+  <h2 class="section-title">Sentiment shapes anomaly returns — but only after purification</h2>
+  <p class="section-lead">
+    The most striking results emerge for market-based sentiment proxies on portfolios that survive
+    all three factor model corrections. The composite Behavioral Sentiment Index delivers the
+    largest and most consistent spread.
+  </p>
+
+  <div class="grid-2">
+    <div>
+      <div class="finding">
+        <strong>Finding 1 — Robust Anomalies Thrive in High Sentiment</strong>
+        <p>For OAP portfolios robust across all three models, the Baker-Wurgler index yields a
+        High-minus-Low monthly alpha difference of <strong>+0.86%</strong> under CAPM
+        (t-stat = 3.86). The composite BSI achieves <strong>+0.98%</strong> (t-stat = 2.93).</p>
+      </div>
+      <div class="finding">
+        <strong>Finding 2 — Dominant Sentiment Factor</strong>
+        <p>PCA on the long sample (1978–2023) shows PC1 alone captures <strong>56.2%</strong>
+        of all sentiment variation. BW and Investor load similarly on PC1 (0.71 and 0.69),
+        confirming a common market-sentiment factor.</p>
+      </div>
+      <div class="finding">
+        <strong>Finding 3 — Sentiment Independence Varies</strong>
+        <p>After orthogonalization, BW and Investor remain highly correlated (r = 0.73, FDR-significant),
+        while VIX is negatively linked to Investor (r = −0.29). Most other pairs are statistically
+        independent, validating the use of multiple proxies.</p>
+      </div>
+    </div>
+    <div>
+      <div class="finding">
+        <strong>Finding 4 — Alpha Survival Declines with Model Complexity</strong>
+        <p>71% of anomalies show significant alpha under CAPM; this falls to 58% under FF5.
+        Only 18% are robust to all three models simultaneously, highlighting the importance
+        of a multi-model robustness filter.</p>
+      </div>
+      <div class="finding">
+        <strong>Finding 5 — Corporate Sentiment Reverses the Pattern</strong>
+        <p>Manager and Employee sentiment indicators show <em>negative</em> High-minus-Low
+        spreads (−0.17% to −0.51% monthly). When corporate insiders are optimistic, anomaly
+        returns moderate—the opposite of retail/market-based sentiment effects.</p>
+      </div>
+      <div class="finding">
+        <strong>Finding 6 — Effect Concentrated in OAP Portfolios</strong>
+        <p>The sentiment effect is stronger among OAP (Open Asset Pricing) portfolios
+        than JKP factor themes, and more pronounced in developed markets than emerging
+        or frontier economies.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Preview Figure ──────────────────────────────────────────────────────── -->
+<section class="section">
+  <p class="section-eyebrow">Highlight Chart</p>
+  <h2 class="section-title">Sentiment regimes and anomaly alpha</h2>
+  <p class="section-lead">
+    Factor-model residuals for robust OAP anomalies are consistently higher in high-sentiment
+    periods. Market-based proxies (BW, Investor, BSI) drive positive spreads;
+    corporate and volatility proxies reverse the direction.
+  </p>
+  <div class="fig-block">
+    <img src="results/figures/sentiment_conditional.png"
+         alt="High vs Low sentiment regime returns for robust OAP anomalies">
+    <div class="fig-caption">
+      <strong>Figure:</strong> Left panel shows the High-minus-Low alpha spread (monthly %) for each
+      sentiment indicator on OAP robust anomalies (CAPM). Right panel contrasts mean alphas in high
+      vs. low sentiment terciles. Sentiment indicators are orthogonalized from macroeconomic growth rates.
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top: 2rem;">
+    <a href="results.html" class="btn btn-primary">See All Results →</a>
+  </div>
+</section>
+
+<!-- ── Data & Methodology Preview ─────────────────────────────────────────── -->
+<section class="section section-dark">
+  <p class="section-eyebrow">Approach</p>
+  <h2 class="section-title" style="color:#fff">Rigorous econometric design</h2>
+  <p class="section-lead">
+    The analysis combines behavioral finance with state-of-the-art asset pricing methodology,
+    spanning over seven decades of data and thousands of statistical tests with multiple-testing correction.
+  </p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <h3>HAC Standard Errors</h3>
+      <p>Newey-West correction (4–6 lags) throughout to handle autocorrelation and heteroskedasticity in monthly financial time series.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔬</div>
+      <h3>FDR Correction</h3>
+      <p>Benjamini-Hochberg False Discovery Rate control applied to all pairwise correlations, preventing spurious significance from multiple testing.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌍</div>
+      <h3>Global Coverage</h3>
+      <p>Results span USA, Developed, Emerging, Frontier, and World market groups using both OAP and JKP factor libraries.</p>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top: 2.5rem;">
+    <a href="methodology.html" class="btn btn-primary">Full Methodology →</a>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+<footer>
+  <p><span class="footer-name">Maximilian Bonk</span> · Master's Thesis in Finance</p>
+  <p style="margin-top:.4rem">
+    <a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">GitHub Repository</a>
+    &nbsp;·&nbsp;
+    <a href="methodology.html">Methodology</a>
+    &nbsp;·&nbsp;
+    <a href="results.html">Results</a>
+  </p>
+  <p style="margin-top:1rem;font-size:.78rem">
+    Data: Baker-Wurgler, Zhou et al., University of Michigan ICS, AAII, CBOE VIX,
+    Open Asset Pricing, JKP Factor Library, Kenneth French Data Library.
+  </p>
+</footer>
+
+</body>
+</html>

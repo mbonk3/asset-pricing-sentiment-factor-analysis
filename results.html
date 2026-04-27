@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Results · Asset Pricing &amp; Investor Sentiment</title>
+  <meta name="description" content="Empirical results: PCA, correlation analysis, alpha survival, and sentiment-conditional factor returns.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>body { font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif; }</style>
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav>
+  <span class="nav-brand">Asset Pricing &amp; Sentiment</span>
+  <ul class="nav-links">
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="methodology.html">Methodology</a></li>
+    <li><a href="results.html" class="active">Results</a></li>
+    <li><a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- ── Page Hero ──────────────────────────────────────────────────────────── -->
+<section class="hero" style="padding: 5rem 5% 4rem;">
+  <p class="hero-eyebrow">Empirical Findings</p>
+  <h1 style="font-size: clamp(2rem, 4vw, 3rem);">Results</h1>
+  <p class="hero-sub">
+    From sentiment structure to anomaly returns: a systematic analysis across
+    1,147 portfolios, 7 indicators, and 4 decades of data.
+  </p>
+  <div class="hero-meta">
+    <span>Part I — Sentiment Analysis</span>
+    <span>Part II — Alpha Survival</span>
+    <span>Part III — Sentiment-Conditional Returns</span>
+  </div>
+</section>
+
+<!-- ── Section nav ────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-bottom:0">
+  <div class="result-nav">
+    <a href="#part1">I. Sentiment Analysis</a>
+    <a href="#part2">II. Alpha Survival</a>
+    <a href="#part3">III. Sentiment-Conditional Returns</a>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- PART I: SENTIMENT ANALYSIS                                                 -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="part1">
+  <p class="section-eyebrow">Part I</p>
+  <h2 class="section-title">Sentiment Analysis</h2>
+  <p class="section-lead">
+    Before assessing sentiment's impact on returns, we characterize the structure of the
+    seven orthogonalized indicators: how correlated are they, how many independent dimensions
+    do they span, and how do they co-move over time?
+  </p>
+
+  <!-- ── 1.1 Pairwise Correlations ── -->
+  <h3 style="font-size:1.15rem; font-weight:600; margin-bottom:.5rem; color:var(--navy)">
+    1.1 Pairwise Correlations of Orthogonalized Sentiment
+  </h3>
+  <p style="font-size:.92rem; color:var(--mid); margin-bottom:.5rem; line-height:1.65">
+    After removing the macroeconomic component from each indicator, the correlation matrix reveals
+    the extent to which the remaining sentiment variation is shared or independent.
+    BW and Investor share the strongest link (r&nbsp;=&nbsp;0.73); most other pairs are near zero.
+  </p>
+
+  <div class="fig-block">
+    <img src="results/figures/correlation_heatmap.png"
+         alt="Pairwise correlation heatmap of orthogonalized sentiment indicators">
+    <div class="fig-caption">
+      <strong>Figure 1.1</strong> Pairwise Pearson correlations of orthogonalized sentiment indicators
+      (full overlap sample). Colour intensity indicates magnitude; red = positive, blue = negative.
+      BW–Investor is the dominant pair (r&nbsp;=&nbsp;0.73); VIX is negatively related to Investor (r&nbsp;=&nbsp;−0.29).
+    </div>
+  </div>
+
+  <!-- FDR results -->
+  <h3 style="font-size:1.15rem; font-weight:600; margin:2rem 0 .5rem; color:var(--navy)">
+    1.2 Significance After FDR Correction (Modern Sample, 1990–2023)
+  </h3>
+  <p style="font-size:.92rem; color:var(--mid); margin-bottom:.5rem; line-height:1.65">
+    Benjamini-Hochberg correction across all 10 pairwise tests in the modern sample.
+    Six of ten pairs remain significant at 5% FDR, confirming that several indicators capture
+    distinct sentiment dimensions.
+  </p>
+
+  <div class="fig-block">
+    <img src="results/figures/fdr_correlations.png"
+         alt="FDR-corrected pairwise correlations (modern sample)">
+    <div class="fig-caption">
+      <strong>Figure 1.2</strong> Pairwise correlations with FDR adjustment (Benjamini-Hochberg, 5%).
+      Green = significantly positive; red = significantly negative; grey = not significant.
+      Modern sample includes BW, Investor, ICS, VIX, and AAII (1990–2023).
+    </div>
+  </div>
+
+  <div class="finding">
+    <strong>Key Takeaway</strong>
+    <p>BW and Investor sentiment co-move strongly even after macro purification, suggesting they
+    capture the same underlying behavioral factor. VIX acts as a fear measure and moves inversely
+    to investor optimism. All other pairs are statistically independent, validating the use of
+    multiple proxies to capture different behavioral dimensions.</p>
+  </div>
+
+  <!-- ── 1.3 PCA ── -->
+  <h3 style="font-size:1.15rem; font-weight:600; margin:2.5rem 0 .5rem; color:var(--navy)">
+    1.3 Principal Component Analysis — Dimensionality of Sentiment
+  </h3>
+  <p style="font-size:.92rem; color:var(--mid); margin-bottom:.5rem; line-height:1.65">
+    PCA reveals how many independent sentiment dimensions exist across different sample periods.
+    In the long sample (1978–2023, three indicators), a single component explains over half the
+    variation. In the modern sample (five indicators), the structure is richer.
+  </p>
+
+  <div class="fig-block">
+    <img src="results/figures/pca_scree.png"
+         alt="PCA scree plots for long and modern samples">
+    <div class="fig-caption">
+      <strong>Figure 1.3</strong> Scree plots for the Long Sample (BW, Investor, ICS; 1978–2023) and
+      Modern Sample (adds VIX &amp; AAII; 1990–2023). Bars show individual explained variance;
+      line shows cumulative variance. Long sample: PC1 alone captures 56.2%.
+    </div>
+  </div>
+
+  <div class="fig-block">
+    <img src="results/figures/pca_loadings.png"
+         alt="PCA factor loadings – Long Sample">
+    <div class="fig-caption">
+      <strong>Figure 1.4</strong> Factor loadings on the first three principal components for the
+      Long Sample (1978–2023). BW and Investor load similarly and positively on PC1 (0.71, 0.69),
+      confirming a shared market-sentiment factor. ICS dominates PC2 (0.98).
+    </div>
+  </div>
+
+  <div class="finding">
+    <strong>Key Takeaway</strong>
+    <p>The long-sample PCA shows that BW and Investor sentiment share a dominant common factor (PC1,
+    56.2% of variance), while ICS represents a distinct consumption-confidence dimension (PC2, 33.2%).
+    In the modern sample the variance is more evenly spread across components, reflecting the greater
+    diversity of the full indicator set.</p>
+  </div>
+
+  <!-- ── 1.4 BSI Time Series ── -->
+  <h3 style="font-size:1.15rem; font-weight:600; margin:2.5rem 0 .5rem; color:var(--navy)">
+    1.4 Behavioral Sentiment Index (BSI) over Time
+  </h3>
+  <p style="font-size:.92rem; color:var(--mid); margin-bottom:.5rem; line-height:1.65">
+    The BSI aggregates the available orthogonalized indicators into a single composite series.
+    It captures the major sentiment episodes of the past four decades, including the dot-com
+    euphoria, the post-GFC pessimism, and the 2020 recovery.
+  </p>
+
+  <div class="fig-block">
+    <img src="results/figures/bsi_timeseries.png"
+         alt="Behavioral Sentiment Index time series 1987–2023">
+    <div class="fig-caption">
+      <strong>Figure 1.5</strong> Standardized sentiment indicators and the Behavioral Sentiment Index
+      (BSI, black line) from 1987 to 2023. Shaded areas mark NBER recessions. Individual indicators
+      are shown at reduced opacity; the BSI is their PC-weighted composite. Positive values indicate
+      above-average investor optimism.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- PART II: ALPHA SURVIVAL                                                    -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="part2">
+  <p class="section-eyebrow">Part II</p>
+  <h2 class="section-title">Anomaly Alpha Survival</h2>
+  <p class="section-lead">
+    Before testing the sentiment channel, we establish which anomalies generate statistically
+    significant alpha and which survive the strongest model corrections. Alpha survival is a
+    necessary condition: only anomalies that genuinely cannot be explained by known risk factors
+    are candidates for a behavioral sentiment explanation.
+  </p>
+
+  <div class="fig-block">
+    <img src="results/figures/alpha_survival.png"
+         alt="Alpha survival bar chart across CAPM, FF3, FF5">
+    <div class="fig-caption">
+      <strong>Figure 2.1</strong> Share of the 1,147 anomaly portfolios (OAP + JKP) with statistically
+      significant alpha (p&lt;0.05, light blue) and robust alpha (significant across all three models,
+      dark blue) under each asset pricing model. FF5 imposes the strictest filter.
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:1.5rem">
+    <div class="card">
+      <h3>CAPM</h3>
+      <p>813 of 1,147 portfolios (71%) generate significant alpha. 294 (26%) survive as robust.
+      Relatively permissive—the single market factor leaves most anomaly premia intact.</p>
+    </div>
+    <div class="card">
+      <h3>Fama-French 3-Factor</h3>
+      <p>857 of 1,147 portfolios (75%) significant—adding size and value factors actually
+      <em>reveals</em> more anomalies by controlling for well-known risk exposures.
+      247 robust (22%).</p>
+    </div>
+    <div class="card">
+      <h3>Fama-French 5-Factor</h3>
+      <p>667 of 1,147 portfolios (58%) significant after adding profitability (RMW) and
+      investment (CMA). 203 robust (18%)—the strictest filter across the three models.</p>
+    </div>
+  </div>
+
+  <div class="finding" style="margin-top:2rem">
+    <strong>Key Takeaway</strong>
+    <p>A substantial share of equity anomalies persist even under the most comprehensive
+    risk adjustment available. The 18% that survive all three models simultaneously
+    represent the anomalies most likely driven by behavioral or structural factors
+    beyond standard risk premia—making them the prime candidates for a sentiment explanation.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- PART III: SENTIMENT-CONDITIONAL RETURNS                                    -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="part3">
+  <p class="section-eyebrow">Part III</p>
+  <h2 class="section-title">Sentiment-Conditional Anomaly Returns</h2>
+  <p class="section-lead">
+    The central test: do robust anomalies earn higher benchmark-adjusted returns in high-sentiment
+    periods than in low-sentiment periods? Results are shown for OAP portfolios using the
+    strictest filter (robust across all three models) under the CAPM alpha as the benchmark-adjusted return.
+  </p>
+
+  <div class="fig-block">
+    <img src="results/figures/sentiment_conditional.png"
+         alt="Sentiment-conditional returns: high vs low sentiment regimes">
+    <div class="fig-caption">
+      <strong>Figure 3.1</strong> Left: High-minus-Low sentiment alpha spread (monthly %) for each
+      indicator, OAP robust anomalies, CAPM alpha. Right: Mean alpha in high (blue) vs. low (red)
+      sentiment terciles. Green bars indicate positive spread (higher returns in high sentiment);
+      red bars indicate the opposite.
+    </div>
+  </div>
+
+  <div class="finding">
+    <strong>Market-Based Sentiment Drives Positive Spreads</strong>
+    <p>The Behavioral Sentiment Index (BSI) generates the largest High-minus-Low spread
+    at <strong>+0.98% per month</strong> under CAPM (t-stat on High = 2.93).
+    Baker-Wurgler follows at <strong>+0.86% per month</strong> (t-stat = 3.86)—the most
+    statistically significant single indicator. Investor sentiment yields +0.74% per month.</p>
+  </div>
+
+  <div class="finding">
+    <strong>Corporate Sentiment Shows the Opposite Pattern</strong>
+    <p>Manager sentiment (Zhou et al.) yields a negative spread of <strong>−0.17% per month</strong>
+    and Employee sentiment <strong>−0.34% per month</strong>. When corporate insiders are optimistic,
+    anomaly returns moderate—potentially because insider optimism correlates with overvaluation
+    and subsequent mean-reversion, reducing the spread available to long-short strategies.</p>
+  </div>
+
+  <div class="finding">
+    <strong>VIX: Fear Index Reverses the Direction</strong>
+    <p>VIX is an inverse sentiment proxy (high VIX = high fear). Its spread is <strong>−0.22% per month</strong>,
+    consistent with the market-based results: periods classified as "high sentiment" by VIX
+    correspond to low-fear (low VIX) environments, which are associated with higher
+    anomaly returns—mirroring the BW and Investor findings.</p>
+  </div>
+
+  <!-- Summary Table -->
+  <h3 style="font-size:1.1rem; font-weight:600; margin:2.5rem 0 .8rem; color:var(--navy)">
+    Summary Table — OAP Robust Anomalies (CAPM Alpha)
+  </h3>
+
+  <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Sentiment Indicator</th>
+          <th>Mean Alpha — High Sentiment (%/mo)</th>
+          <th>Mean Alpha — Low Sentiment (%/mo)</th>
+          <th>High − Low Spread (%/mo)</th>
+          <th>t-stat (High)</th>
+          <th>Direction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BSI (Composite)</td>
+          <td class="pos">+0.539</td>
+          <td class="neg">−0.441</td>
+          <td class="pos">+0.980</td>
+          <td>2.93</td>
+          <td>Positive ↑</td>
+        </tr>
+        <tr>
+          <td>Baker-Wurgler</td>
+          <td class="pos">+0.519</td>
+          <td class="neg">−0.345</td>
+          <td class="pos">+0.864</td>
+          <td>3.86</td>
+          <td>Positive ↑</td>
+        </tr>
+        <tr>
+          <td>Investor (Zhou)</td>
+          <td class="pos">+0.457</td>
+          <td class="neg">−0.283</td>
+          <td class="pos">+0.739</td>
+          <td>2.92</td>
+          <td>Positive ↑</td>
+        </tr>
+        <tr>
+          <td>ICS (Michigan)</td>
+          <td class="pos">+0.345</td>
+          <td class="neg">−0.079</td>
+          <td class="pos">+0.424</td>
+          <td>2.23</td>
+          <td>Positive ↑</td>
+        </tr>
+        <tr>
+          <td>AAII Bull-Bear</td>
+          <td>+0.034</td>
+          <td>+0.061</td>
+          <td>−0.027</td>
+          <td>0.20</td>
+          <td>Neutral ↔</td>
+        </tr>
+        <tr>
+          <td>VIX (inverse)</td>
+          <td class="neg">−0.085</td>
+          <td class="pos">+0.132</td>
+          <td class="neg">−0.216</td>
+          <td>−0.65</td>
+          <td>Negative ↓</td>
+        </tr>
+        <tr>
+          <td>Manager (Zhou)</td>
+          <td class="neg">−0.554</td>
+          <td class="neg">−0.385</td>
+          <td class="neg">−0.169</td>
+          <td>−1.91</td>
+          <td>Negative ↓</td>
+        </tr>
+        <tr>
+          <td>Employee (Zhou)</td>
+          <td class="neg">−0.634</td>
+          <td class="neg">−0.291</td>
+          <td class="neg">−0.342</td>
+          <td>−2.15</td>
+          <td>Negative ↓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:.82rem; color:var(--mid); margin-top:.7rem">
+    OAP portfolios robust across CAPM, FF3, and FF5. Tercile split on orthogonalized
+    sentiment. t-statistics are Newey-West (3 lags). Monthly data.
+  </p>
+</section>
+
+<!-- ── Interpretation ─────────────────────────────────────────────────────── -->
+<section class="section section-alt">
+  <p class="section-eyebrow">Interpretation</p>
+  <h2 class="section-title">What the evidence implies</h2>
+  <p class="section-lead">
+    The results paint a nuanced picture: sentiment matters for anomaly returns, but the direction
+    and magnitude depend critically on the type of sentiment measured.
+  </p>
+
+  <div class="grid-2">
+    <div>
+      <h3 style="font-size:1rem; font-weight:600; margin-bottom:.5rem; color:var(--navy)">
+        Market sentiment amplifies mispricing
+      </h3>
+      <p style="font-size:.9rem; color:var(--mid); line-height:1.65; margin-bottom:1.2rem">
+        High retail and market-based sentiment periods appear to coincide with elevated
+        mispricing across anomaly portfolios. Strategies that exploit well-known return patterns
+        earn significantly higher alphas when the market is in an optimistic state, consistent
+        with limits-to-arbitrage arguments: sentiment-driven demand inflates mispricing,
+        which long-short portfolios harvest.
+      </p>
+
+      <h3 style="font-size:1rem; font-weight:600; margin-bottom:.5rem; color:var(--navy)">
+        Orthogonalization is essential
+      </h3>
+      <p style="font-size:.9rem; color:var(--mid); line-height:1.65">
+        Without purifying sentiment of macroeconomic influences, these results would be
+        contaminated by business-cycle effects. The orthogonalization step is what allows
+        a causal attribution to the behavioral channel rather than to macroeconomic
+        conditions that drive both sentiment and returns.
+      </p>
+    </div>
+    <div>
+      <h3 style="font-size:1rem; font-weight:600; margin-bottom:.5rem; color:var(--navy)">
+        Corporate insiders signal mean reversion
+      </h3>
+      <p style="font-size:.9rem; color:var(--mid); line-height:1.65; margin-bottom:1.2rem">
+        Manager and Employee sentiment reversals suggest that corporate optimism is associated
+        with periods of overvaluation—precisely when anomaly premia compress. This aligns with
+        theoretical models in which insiders exploit overoptimistic markets via equity issuance
+        and capex expansion, reducing return predictability.
+      </p>
+
+      <h3 style="font-size:1rem; font-weight:600; margin-bottom:.5rem; color:var(--navy)">
+        Robustness filter matters
+      </h3>
+      <p style="font-size:.9rem; color:var(--mid); line-height:1.65">
+        The sentiment effect is strongest and most statistically significant for portfolios
+        that are robust across all three factor models. For the "All" group (including non-significant
+        anomalies), effects are considerably weaker—confirming that the sentiment channel operates
+        primarily through genuine pricing anomalies rather than noise.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+<footer>
+  <p><span class="footer-name">Maximilian Bonk</span> · Master's Thesis in Finance</p>
+  <p style="margin-top:.4rem">
+    <a href="https://github.com/mbonk3/asset-pricing-sentiment-factor-analysis" target="_blank">GitHub Repository</a>
+    &nbsp;·&nbsp;
+    <a href="index.html">Overview</a>
+    &nbsp;·&nbsp;
+    <a href="methodology.html">Methodology</a>
+  </p>
+  <p style="margin-top:1rem;font-size:.78rem">
+    Data: Baker-Wurgler, Zhou et al., University of Michigan ICS, AAII, CBOE VIX,
+    Open Asset Pricing, JKP Factor Library, Kenneth French Data Library.
+  </p>
+</footer>
+
+</body>
+</html>
